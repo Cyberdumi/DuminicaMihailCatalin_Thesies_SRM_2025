@@ -11,6 +11,9 @@ import ProductForm from './components/products/ProductForm';
 import ContactList from './components/contacts/ContactList';
 import ContactDetails from './components/contacts/ContactDetails';
 import ContactForm from './components/contacts/ContactForm';
+import OfferList from './components/offers/OfferList';
+import OfferDetails from './components/offers/OfferDetails';
+import OfferForm from './components/offers/OfferForm';
 import Dashboard from './components/dashboard/dashboard';
 
 function App() {
@@ -40,11 +43,11 @@ function App() {
             <Route path="/contacts/:id" element={<ContactDetails />} />
             <Route path="/contacts/:id/edit" element={<ContactForm />} />
 
-            {/* Offer Routes
+            {/* Offer Routes */}
             <Route path="/offers" element={<OfferList />} />
             <Route path="/offers/new" element={<OfferForm />} />
             <Route path="/offers/:id" element={<OfferDetails />} />
-            <Route path="/offers/:id/edit" element={<OfferForm />} /> */}
+            <Route path="/offers/:id/edit" element={<OfferForm />} />
           </Routes>
         </div>
       </div>
