@@ -10,10 +10,21 @@ const api = axios.create({
 });
 
 
+const token = localStorage.getItem('token');
+if (token) {
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
+
 api.interceptors.response.use(
   response => response,
   error => {
-    console.error('API Error:', error.response);
+  
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+   
+      console.error('Authentication error:', error.response.data);
+    }
+    
     return Promise.reject(error);
   }
 );
