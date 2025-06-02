@@ -28,5 +28,23 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+export const adminApi = {
+  getUsers: async () => {
+    return await api.get('/api/admin/users');
+  },
+  
+  createUser: async (userData) => {
+    return await api.post('/api/admin/users', userData);
+  },
+  
+  updateUser: async (id, userData) => {
+    return await api.put(`/api/admin/users/${id}`, userData);
+  },
+  
+  toggleUserStatus: async (id, isActive) => {
+    return await api.put(`/api/admin/users/${id}`, { isActive });
+  }
+};
+
 
 export default api;

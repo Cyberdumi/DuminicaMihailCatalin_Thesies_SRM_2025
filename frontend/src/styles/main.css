@@ -148,3 +148,85 @@
     padding: 10px 15px;
     border-radius: 4px;
   }
+
+.product-detail-overlay,
+.supplier-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(3px);
+  animation: overlay-fade-in 0.3s ease;
+}
+
+.product-detail-modal,
+.supplier-detail-modal {
+  position: relative;
+  width: 90%;
+  max-width: 1200px; 
+  max-height: 90vh;
+  z-index: 1050;
+  animation: modal-pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.product-detail-modal .modal-content,
+.supplier-detail-modal .modal-content {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1), 
+              0 0 0 1px rgba(255, 255, 255, 0.9),
+              0 0 0 3px rgba(13, 110, 253, 0.25), 
+              0 0 40px rgba(13, 110, 253, 0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.product-detail-modal .modal-header,
+.supplier-detail-modal .modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(13, 110, 253, 0.03);
+}
+
+.product-detail-modal .modal-footer,
+.supplier-detail-modal .modal-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(13, 110, 253, 0.03);
+}
+
+.product-detail-overlay::after,
+.supplier-detail-overlay::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 30%, rgba(13, 110, 253, 0.05) 100%);
+  pointer-events: none;
+}
+
+@keyframes overlay-fade-in {
+  from { background-color: rgba(255, 255, 255, 0); backdrop-filter: blur(0); }
+  to { background-color: rgba(255, 255, 255, 0.7); backdrop-filter: blur(3px); }
+}
+
+@keyframes modal-pop-in {
+  0% { transform: scale(0.9); opacity: 0; }
+  40% { transform: scale(1.03); }
+  60% { transform: scale(0.98); }
+  80% { transform: scale(1.01); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 992px) {
+  .product-detail-modal,
+  .supplier-detail-modal {
+    width: 95%;
+  }
+}

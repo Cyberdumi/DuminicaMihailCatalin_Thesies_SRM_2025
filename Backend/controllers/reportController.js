@@ -112,3 +112,74 @@ exports.getOffersReport = async (req, res) => {
     res.status(500).json({ message: 'Error generating offers report', error: error.message });
   }
 };
+
+exports.getSupplierPerformance = async (req, res) => {
+  try {
+    const suppliers = await Supplier.findAll({
+      include: [{
+        model: Offer,
+        as: 'offers'
+      }]
+    });
+    
+    const performance = suppliers.map(supplier => {
+      // Calculate metrics based on offers
+      const offers = supplier.offers || [];
+      const activeOffers = offers.filter(o => new Date(o.validTo) >= new Date());
+      
+      return {
+        id: supplier.id,
+        name: supplier.name,
+        onTimeDelivery: Math.floor(Math.random() * 15) + 85, // In a real app, this would be real data
+        qualityScore: offers.length > 0 ? Math.round((activeOffers.length / offers.length) * 100) : 0,
+        priceCompetitiveness: Math.floor(Math.random() * 15) + 85, // Placeholder
+        overall: Math.floor(Math.random() * 10) + 85 // Placeholder
+      };
+    });
+    
+    res.status(200).json(performance);
+  } catch (error) {
+    console.error('Error fetching supplier performance:', error);
+    res.status(500).json({ message: 'Error fetching supplier performance', error: error.message });
+  }
+};
+
+exports.getCategorySpend = async (req, res) => {
+  try {
+
+    const products = await Product.findAll({
+      include: [{
+        model: Offer,
+        as: 'offers'
+      }]
+    });
+    
+    const categories = {};
+    let totalSpend = 0;
+    
+    products.forEach(product => {
+      const category = product.category || 'Uncategorized';
+      if (!categories[category]) {
+        categories[category] = 0;
+      }
+      
+      const offers = product.offers || [];
+      offers.forEach(offer => {
+        const value = parseFloat(offer.price) * (offer.quantity || 1);
+        categories[category] += value;
+        totalSpend += value;
+      });
+    });
+    
+    const result = Object.entries(categories).map(([name, value]) => ({
+      name,
+      value: Math.round(value),
+      percentage: Math.round((value / totalSpend) * 100)
+    }));
+    
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error fetching category spend:', error);
+    res.status(500).json({ message: 'Error fetching category spend', error: error.message });
+  }
+};
