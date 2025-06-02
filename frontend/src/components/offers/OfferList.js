@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { CSVLink } from 'react-csv';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import offerService from '../../services/offerService';
 import supplierService from '../../services/supplierService';
 import productService from '../../services/productService';
@@ -13,8 +16,34 @@ function OfferList() {
   const [filters, setFilters] = useState({
     supplierId: '',
     productId: '',
-    active: ''
+    active: '',
+    dateFrom: '',
+    dateTo: ''
   });
+
+  // Add headers for CSV export
+  const csvHeaders = [
+    { label: "ID", key: "id" },
+    { label: "Supplier", key: "supplierName" },
+    { label: "Product", key: "productName" },
+    { label: "Price", key: "price" },
+    { label: "Valid From", key: "validFrom" },
+    { label: "Valid To", key: "validTo" },
+    { label: "Status", key: "status" },
+    { label: "Quantity", key: "quantity" }
+  ];
+  
+  // Prepare data for exports
+  const exportData = offers.map(offer => ({
+    id: offer.id,
+    supplierName: offer.supplier ? offer.supplier.name : 'Unknown',
+    productName: offer.product ? offer.product.name : 'Unknown',
+    price: Number(offer.price).toFixed(2),
+    validFrom: new Date(offer.validFrom).toLocaleDateString(),
+    validTo: new Date(offer.validTo).toLocaleDateString(),
+    status: new Date(offer.validTo) >= new Date() ? 'Active' : 'Expired',
+    quantity: offer.quantity || 'N/A'
+  }));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,7 +93,9 @@ function OfferList() {
     setFilters({
       supplierId: '',
       productId: '',
-      active: ''
+      active: '',
+      dateFrom: '',
+      dateTo: ''
     });
     setLoading(true);
     try {
@@ -88,6 +119,34 @@ function OfferList() {
     }
   };
 
+  // Function to export PDF
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    const tableColumn = ["ID", "Supplier", "Product", "Price", "Valid From", "Valid To", "Status"];
+    const tableRows = [];
+    exportData.forEach(offer => {
+      const offerData = [
+        offer.id,
+        offer.supplierName,
+        offer.productName,
+        `$${offer.price}`,
+        offer.validFrom,
+        offer.validTo,
+        offer.status
+      ];
+      tableRows.push(offerData);
+    });
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [66, 139, 202] }
+    });
+    doc.text("Offers Report", 14, 15);
+    doc.save(`offers-report-${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
   if (loading) return <div className="text-center mt-5"><div className="spinner-border text-primary" role="status"></div></div>;
   if (error) return <div className="alert alert-danger">{error}</div>;
 
@@ -95,7 +154,27 @@ function OfferList() {
     <div className="fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="page-header">Price Offers</h2>
-        <Link to="/offers/new" className="btn btn-primary">Add New Offer</Link>
+        <div>
+          <Link to="/offers/new" className="btn btn-primary me-2">Add New Offer</Link>
+          <div className="btn-group">
+            <button type="button" className="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              Export
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li>
+                <CSVLink 
+                  data={exportData} 
+                  headers={csvHeaders} 
+                  filename={`offers-export-${new Date().toISOString().split('T')[0]}.csv`}
+                  className="dropdown-item"
+                >
+                  Export as CSV
+                </CSVLink>
+              </li>
+              <li><button className="dropdown-item" onClick={exportPDF}>Export as PDF</button></li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div className="card mb-4">
@@ -104,7 +183,7 @@ function OfferList() {
         </div>
         <div className="card-body">
           <div className="row g-3">
-            <div className="col-md-3">
+            <div className="col-md-2">
               <label htmlFor="supplierId" className="form-label">Supplier</label>
               <select 
                 className="form-select" 
@@ -121,7 +200,7 @@ function OfferList() {
                 ))}
               </select>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-2">
               <label htmlFor="productId" className="form-label">Product</label>
               <select 
                 className="form-select" 
@@ -138,7 +217,7 @@ function OfferList() {
                 ))}
               </select>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-2">
               <label htmlFor="active" className="form-label">Status</label>
               <select 
                 className="form-select" 
@@ -152,7 +231,29 @@ function OfferList() {
                 <option value="false">Expired</option>
               </select>
             </div>
-            <div className="col-md-3 d-flex align-items-end">
+            <div className="col-md-2">
+              <label htmlFor="dateFrom" className="form-label">Valid From</label>
+              <input
+                type="date"
+                className="form-control"
+                id="dateFrom"
+                name="dateFrom"
+                value={filters.dateFrom}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-2">
+              <label htmlFor="dateTo" className="form-label">Valid To</label>
+              <input
+                type="date"
+                className="form-control"
+                id="dateTo"
+                name="dateTo"
+                value={filters.dateTo}
+                onChange={handleFilterChange}
+              />
+            </div>
+            <div className="col-md-2 d-flex align-items-end">
               <div className="d-grid gap-2 w-100">
                 <button onClick={applyFilters} className="btn btn-primary">
                   Apply Filters

@@ -21,6 +21,7 @@ import Unauthorized from './components/auth/Unauthorized';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import AdminDashboard from './components/admin/AdminDashboard';
+import ReportsDashboard from './components/reports/ReportsDashboard';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
               {/* Protected Routes */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/reports" element={<ReportsDashboard />} />
                 
                 {/* Supplier Routes */}
                 <Route path="/suppliers" element={<SupplierList />} />

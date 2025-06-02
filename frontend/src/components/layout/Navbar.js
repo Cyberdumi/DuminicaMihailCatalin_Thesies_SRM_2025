@@ -34,6 +34,9 @@ function Navbar() {
                 <li className="nav-item">
                   <Link className="nav-link" to="/offers">Offers</Link>
                 </li>
+                <li className="nav-item">
+  <Link className="nav-link" to="/reports">Reports</Link>
+</li>
                 {currentUser?.role === 'admin' && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/admin">Admin</Link>
@@ -61,6 +64,9 @@ function Navbar() {
               <li className="nav-item">
                 <Link className="nav-link" to="/register">Register</Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/reports">Reports</Link>
+                </li>
             </ul>
           )}
         </div>

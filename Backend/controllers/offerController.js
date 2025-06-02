@@ -3,14 +3,24 @@ const Supplier = require('../models/Supplier');
 const Product = require('../models/Product');
 const { Op } = require("sequelize");
 
-
 exports.getAllOffers = async (req, res) => {
     try {
-       
-        const { supplierId, productId, active, sortBy = 'createdAt', order = 'DESC' } = req.query;
+        const { 
+            supplierId, 
+            productId, 
+            active, 
+            dateFrom, 
+            dateTo, 
+            sortBy = 'createdAt', 
+            order = 'DESC' 
+        } = req.query;
+        
         let whereClause = {};
+        
         if (supplierId) whereClause.supplierId = supplierId;
         if (productId) whereClause.productId = productId;
+        
+
         if (active === 'true') {
             whereClause.validFrom = { [Op.lte]: new Date() }; 
             whereClause.validTo = { [Op.gte]: new Date() };  
@@ -23,17 +33,30 @@ exports.getAllOffers = async (req, res) => {
                 ]
              }
         }
+        
+    
+        if (dateFrom) {
+            whereClause.validFrom = whereClause.validFrom || {};
+            whereClause.validFrom[Op.gte] = new Date(dateFrom);
+        }
+        
+        if (dateTo) {
+            whereClause.validTo = whereClause.validTo || {};
+            whereClause.validTo[Op.lte] = new Date(dateTo);
+        }
 
         const offers = await Offer.findAll({
             where: whereClause,
             include: [
                 { model: Supplier, as: 'supplier', attributes: ['id', 'name'] },
-                { model: Product, as: 'product', attributes: ['id', 'name', 'unitOfMeasure'] }
+                { model: Product, as: 'product', attributes: ['id', 'name'] }
             ],
-            order: [[sortBy, order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC']]
+            order: [[sortBy, order]]
         });
+
         res.status(200).json(offers);
     } catch (error) {
+        console.error('Error fetching offers:', error);
         res.status(500).json({ message: 'Error fetching offers', error: error.message });
     }
 };

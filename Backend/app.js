@@ -13,6 +13,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const offerRoutes = require('./routes/offerRoutes');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,6 +45,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/contacts', contactRoutes);
 app.use('/api/offers', offerRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/reports', reportRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
