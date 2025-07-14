@@ -1,9 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
-
+const { Op } = require('sequelize');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-
 
 exports.register = async (req, res) => {
   try {
@@ -12,7 +11,7 @@ exports.register = async (req, res) => {
     
     const existingUser = await User.findOne({ 
       where: { 
-        [sequelize.Op.or]: [{ username }, { email }] 
+        [Op.or]: [{ username }, { email }] 
       } 
     });
 
@@ -22,7 +21,7 @@ exports.register = async (req, res) => {
       });
     }
 
-   
+    
     const user = await User.create({
       username,
       email,
@@ -30,14 +29,12 @@ exports.register = async (req, res) => {
       role: role || 'user'
     });
 
-  
     const userResponse = {
       id: user.id,
       username: user.username,
       email: user.email,
       role: user.role
     };
-
 
     const token = jwt.sign(
       { id: user.id, role: user.role },
@@ -59,18 +56,15 @@ exports.register = async (req, res) => {
   }
 };
 
-
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    
     const user = await User.findOne({ where: { username } });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
- 
     if (!user.isActive) {
       return res.status(401).json({ message: 'Account is deactivated' });
     }
@@ -106,7 +100,6 @@ exports.login = async (req, res) => {
     });
   }
 };
-
 
 exports.getCurrentUser = async (req, res) => {
   try {
