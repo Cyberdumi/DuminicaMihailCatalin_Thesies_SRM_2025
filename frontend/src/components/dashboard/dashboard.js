@@ -50,7 +50,7 @@ function Dashboard() {
           return sum + (parseFloat(offer.price) * (offer.quantity || 1));
         }, 0);
         
-        const avgQualityScore = Math.floor(Math.random() * 15) + 85;
+        const avgQualityScore = 78
         
         setStats({
           suppliers: suppliers.length,

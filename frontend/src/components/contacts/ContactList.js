@@ -478,133 +478,135 @@ function ContactList() {
           </div>
         )}
       </div>
-
-      {selectedContact && (
-        <div className="modal fade show" style={{display: 'block'}} tabIndex="-1">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Contact Details</h5>
-                <button type="button" className="btn-close" onClick={() => setSelectedContact(null)}></button>
+{selectedContact && (
+  <div className="contact-detail-overlay" onClick={() => setSelectedContact(null)}>
+    <div 
+      className="contact-detail-modal"
+      onClick={e => e.stopPropagation()} 
+    >
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Contact Details</h5>
+          <button type="button" className="btn-close" onClick={() => setSelectedContact(null)}></button>
+        </div>
+        <div className="modal-body">
+          <div className="text-center mb-4">
+            <div 
+              className={`rounded-circle d-inline-flex align-items-center justify-content-center mb-3 ${getRandomPastelColor(`${selectedContact.firstName} ${selectedContact.lastName}`)}`} 
+              style={{ width: "80px", height: "80px" }}
+            >
+              <span className="fw-bold fs-3">{getInitials(selectedContact.firstName, selectedContact.lastName)}</span>
+            </div>
+            <h4>{selectedContact.firstName} {selectedContact.lastName}</h4>
+            <p className="text-muted mb-0">{selectedContact.jobTitle || 'No job title'}</p>
+          </div>
+          
+          <div className="card border-0 bg-light mb-3">
+            <div className="card-body">
+              <h6 className="card-title text-muted mb-3">Contact Information</h6>
+              
+              <div className="d-flex align-items-center mb-3">
+                <div className="bg-white p-2 rounded-circle me-3">
+                  <Mail size={20} className="text-primary" />
+                </div>
+                <div>
+                  <div className="small text-muted">Email</div>
+                  <a href={`mailto:${selectedContact.email}`} className="text-decoration-none fw-medium">
+                    {selectedContact.email}
+                  </a>
+                </div>
               </div>
-              <div className="modal-body">
-                <div className="text-center mb-4">
-                  <div 
-                    className={`rounded-circle d-inline-flex align-items-center justify-content-center mb-3 ${getRandomPastelColor(`${selectedContact.firstName} ${selectedContact.lastName}`)}`} 
-                    style={{ width: "80px", height: "80px" }}
-                  >
-                    <span className="fw-bold fs-3">{getInitials(selectedContact.firstName, selectedContact.lastName)}</span>
-                  </div>
-                  <h4>{selectedContact.firstName} {selectedContact.lastName}</h4>
-                  <p className="text-muted mb-0">{selectedContact.jobTitle || 'No job title'}</p>
+              
+              <div className="d-flex align-items-center mb-3">
+                <div className="bg-white p-2 rounded-circle me-3">
+                  <Phone size={20} className="text-primary" />
                 </div>
+                <div>
+                  <div className="small text-muted">Phone</div>
+                  {selectedContact.phone ? (
+                    <a href={`tel:${selectedContact.phone}`} className="text-decoration-none fw-medium">
+                      {selectedContact.phone}
+                    </a>
+                  ) : (
+                    <span className="text-muted">Not provided</span>
+                  )}
+                </div>
+              </div>
+              
+              <div className="d-flex align-items-center">
+                <div className="bg-white p-2 rounded-circle me-3">
+                  <Briefcase size={20} className="text-primary" />
+                </div>
+                <div>
+                  <div className="small text-muted">Job Title</div>
+                  <span className="fw-medium">
+                    {selectedContact.jobTitle || 'Not specified'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {selectedContact.supplier && (
+            <div className="card border-0 bg-light">
+              <div className="card-body">
+                <h6 className="card-title text-muted mb-3">Company Information</h6>
                 
-                <div className="card border-0 bg-light mb-3">
-                  <div className="card-body">
-                    <h6 className="card-title text-muted mb-3">Contact Information</h6>
-                    
-                    <div className="d-flex align-items-center mb-3">
-                      <div className="bg-white p-2 rounded-circle me-3">
-                        <Mail size={20} className="text-primary" />
-                      </div>
-                      <div>
-                        <div className="small text-muted">Email</div>
-                        <a href={`mailto:${selectedContact.email}`} className="text-decoration-none fw-medium">
-                          {selectedContact.email}
-                        </a>
-                      </div>
-                    </div>
-                    
-                    <div className="d-flex align-items-center mb-3">
-                      <div className="bg-white p-2 rounded-circle me-3">
-                        <Phone size={20} className="text-primary" />
-                      </div>
-                      <div>
-                        <div className="small text-muted">Phone</div>
-                        {selectedContact.phone ? (
-                          <a href={`tel:${selectedContact.phone}`} className="text-decoration-none fw-medium">
-                            {selectedContact.phone}
-                          </a>
-                        ) : (
-                          <span className="text-muted">Not provided</span>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="d-flex align-items-center">
-                      <div className="bg-white p-2 rounded-circle me-3">
-                        <Briefcase size={20} className="text-primary" />
-                      </div>
-                      <div>
-                        <div className="small text-muted">Job Title</div>
-                        <span className="fw-medium">
-                          {selectedContact.jobTitle || 'Not specified'}
-                        </span>
-                      </div>
-                    </div>
+                <div className="d-flex align-items-center mb-3">
+                  <div className="bg-white p-2 rounded-circle me-3">
+                    <Building2 size={20} className="text-primary" />
+                  </div>
+                  <div>
+                    <div className="small text-muted">Supplier</div>
+                    <span className="fw-medium">
+                      {selectedContact.supplier.name}
+                    </span>
                   </div>
                 </div>
                 
-                {selectedContact.supplier && (
-                  <div className="card border-0 bg-light">
-                    <div className="card-body">
-                      <h6 className="card-title text-muted mb-3">Company Information</h6>
-                      
-                      <div className="d-flex align-items-center mb-3">
-                        <div className="bg-white p-2 rounded-circle me-3">
-                          <Building2 size={20} className="text-primary" />
-                        </div>
-                        <div>
-                          <div className="small text-muted">Supplier</div>
-                          <span className="fw-medium">
-                            {selectedContact.supplier.name}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      {selectedContact.supplier.email && (
-                        <div className="d-flex align-items-center mb-3">
-                          <div className="bg-white p-2 rounded-circle me-3">
-                            <Mail size={20} className="text-primary" />
-                          </div>
-                          <div>
-                            <div className="small text-muted">Company Email</div>
-                            <a href={`mailto:${selectedContact.supplier.email}`} className="text-decoration-none fw-medium">
-                              {selectedContact.supplier.email}
-                            </a>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {selectedContact.supplier.phone && (
-                        <div className="d-flex align-items-center">
-                          <div className="bg-white p-2 rounded-circle me-3">
-                            <Phone size={20} className="text-primary" />
-                          </div>
-                          <div>
-                            <div className="small text-muted">Company Phone</div>
-                            <a href={`tel:${selectedContact.supplier.phone}`} className="text-decoration-none fw-medium">
-                              {selectedContact.supplier.phone}
-                            </a>
-                          </div>
-                        </div>
-                      )}
+                {selectedContact.supplier.email && (
+                  <div className="d-flex align-items-center mb-3">
+                    <div className="bg-white p-2 rounded-circle me-3">
+                      <Mail size={20} className="text-primary" />
+                    </div>
+                    <div>
+                      <div className="small text-muted">Company Email</div>
+                      <a href={`mailto:${selectedContact.supplier.email}`} className="text-decoration-none fw-medium">
+                        {selectedContact.supplier.email}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedContact.supplier.phone && (
+                  <div className="d-flex align-items-center">
+                    <div className="bg-white p-2 rounded-circle me-3">
+                      <Phone size={20} className="text-primary" />
+                    </div>
+                    <div>
+                      <div className="small text-muted">Company Phone</div>
+                      <a href={`tel:${selectedContact.supplier.phone}`} className="text-decoration-none fw-medium">
+                        {selectedContact.supplier.phone}
+                      </a>
                     </div>
                   </div>
                 )}
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setSelectedContact(null)}>Close</button>
-                <Link to={`/contacts/${selectedContact.id}/edit`} className="btn btn-primary">
-                  <Edit size={16} className="me-2" />
-                  Edit Contact
-                </Link>
-              </div>
             </div>
-          </div>
-          <div className="modal-backdrop fade show" onClick={() => setSelectedContact(null)}></div>
+          )}
         </div>
-      )}
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={() => setSelectedContact(null)}>Close</button>
+          <Link to={`/contacts/${selectedContact.id}/edit`} className="btn btn-primary">
+            <Edit size={16} className="me-2" />
+            Edit Contact
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+      
     </div>
   );
 }

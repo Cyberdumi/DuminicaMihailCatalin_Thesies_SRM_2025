@@ -59,36 +59,33 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login user
+
 exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Find user by username
+    
     const user = await User.findOne({ where: { username } });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Check if user is active
+ 
     if (!user.isActive) {
       return res.status(401).json({ message: 'Account is deactivated' });
     }
 
-    // Check password
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate token
     const token = jwt.sign(
       { id: user.id, role: user.role },
       JWT_SECRET,
       { expiresIn: '8h' }
     );
 
-    // User data to return (excluding password)
     const userResponse = {
       id: user.id,
       username: user.username,

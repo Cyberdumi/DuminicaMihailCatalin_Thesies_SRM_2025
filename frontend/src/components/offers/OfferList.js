@@ -686,181 +686,183 @@ function OfferList() {
           </div>
         )}
       </div>
-      {selectedOffer && (
-        <div className="modal fade show" style={{display: 'block'}} tabIndex="-1">
-          <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Offer Details</h5>
-                <button type="button" className="btn-close" onClick={() => setSelectedOffer(null)}></button>
+    {selectedOffer && (
+  <div className="offer-detail-overlay" onClick={() => setSelectedOffer(null)}>
+    <div 
+      className="offer-detail-modal"
+      onClick={e => e.stopPropagation()} 
+    >
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">Offer Details</h5>
+          <button type="button" className="btn-close" onClick={() => setSelectedOffer(null)}></button>
+        </div>
+        <div className="modal-body">
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div className="card bg-light border-0 h-100">
+                <div className="card-body">
+                  <h6 className="card-title text-muted mb-3">Product Information</h6>
+                  {selectedOffer.product ? (
+                    <div>
+                      <div className="d-flex align-items-center mb-3">
+                        <div className="bg-white p-2 rounded-circle me-3">
+                          <Package size={24} className="text-primary" />
+                        </div>
+                        <div>
+                          <h5 className="mb-0">{selectedOffer.product.name}</h5>
+                          {selectedOffer.product.category && (
+                            <span className="badge bg-info mt-1">{selectedOffer.product.category}</span>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-muted small mb-2">
+                        {selectedOffer.product.description || 'No description available'}
+                      </p>
+                      <div className="mt-3">
+                        <Link to={`/products/${selectedOffer.productId}`} className="btn btn-sm btn-outline-primary">
+                          View Product Details
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-5 text-muted">
+                      <Package size={32} className="mb-2" />
+                      <p>Product details not available</p>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="modal-body">
-                <div className="row g-4">
-                  <div className="col-md-6">
-                    <div className="card bg-light border-0 h-100">
-                      <div className="card-body">
-                        <h6 className="card-title text-muted mb-3">Product Information</h6>
-                        {selectedOffer.product ? (
-                          <div>
-                            <div className="d-flex align-items-center mb-3">
-                              <div className="bg-white p-2 rounded-circle me-3">
-                                <Package size={24} className="text-primary" />
-                              </div>
-                              <div>
-                                <h5 className="mb-0">{selectedOffer.product.name}</h5>
-                                {selectedOffer.product.category && (
-                                  <span className="badge bg-info mt-1">{selectedOffer.product.category}</span>
-                                )}
-                              </div>
-                            </div>
-                            <p className="text-muted small mb-2">
-                              {selectedOffer.product.description || 'No description available'}
-                            </p>
-                            <div className="mt-3">
-                              <Link to={`/products/${selectedOffer.productId}`} className="btn btn-sm btn-outline-primary">
-                                View Product Details
-                              </Link>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="text-center py-5 text-muted">
-                            <Package size={32} className="mb-2" />
-                            <p>Product details not available</p>
-                          </div>
+            </div>
+            
+            <div className="col-md-6">
+              <div className="card bg-light border-0 h-100">
+                <div className="card-body">
+                  <h6 className="card-title text-muted mb-3">Supplier Information</h6>
+                  {selectedOffer.supplier ? (
+                    <div>
+                      <div className="d-flex align-items-center mb-3">
+                        <div className="bg-white p-2 rounded-circle me-3">
+                          <Users size={24} className="text-primary" />
+                        </div>
+                        <div>
+                          <h5 className="mb-0">{selectedOffer.supplier.name}</h5>
+                          <p className="text-muted small mb-0">{selectedOffer.supplier.email || 'No email'}</p>
+                        </div>
+                      </div>
+                      <div className="mt-3">
+                        <Link to={`/suppliers/${selectedOffer.supplierId}`} className="btn btn-sm btn-outline-primary">
+                          View Supplier Details
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-5 text-muted">
+                      <Users size={32} className="mb-2" />
+                      <p>Supplier details not available</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div className="col-12">
+              <div className="card border-0 shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title mb-4">Offer Details</h5>
+                  <div className="row g-3">
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label className="form-label text-muted small">Price</label>
+                        <div className="d-flex align-items-center">
+                          <DollarSign size={20} className="text-success me-2" />
+                          <h4 className="mb-0">${Number(selectedOffer.price).toFixed(2)}</h4>
+                        </div>
+                        {selectedOffer.quantity && (
+                          <small className="text-muted">Quantity: {selectedOffer.quantity}</small>
                         )}
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="col-md-6">
-                    <div className="card bg-light border-0 h-100">
-                      <div className="card-body">
-                        <h6 className="card-title text-muted mb-3">Supplier Information</h6>
-                        {selectedOffer.supplier ? (
-                          <div>
-                            <div className="d-flex align-items-center mb-3">
-                              <div className="bg-white p-2 rounded-circle me-3">
-                                <Users size={24} className="text-primary" />
-                              </div>
-                              <div>
-                                <h5 className="mb-0">{selectedOffer.supplier.name}</h5>
-                                <p className="text-muted small mb-0">{selectedOffer.supplier.email || 'No email'}</p>
-                              </div>
-                            </div>
-                            <div className="mt-3">
-                              <Link to={`/suppliers/${selectedOffer.supplierId}`} className="btn btn-sm btn-outline-primary">
-                                View Supplier Details
-                              </Link>
-                            </div>
+                    
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label className="form-label text-muted small">Validity Period</label>
+                        <div>
+                          <div className="d-flex align-items-center mb-1">
+                            <Calendar size={16} className="text-primary me-2" />
+                            <span>From: {new Date(selectedOffer.validFrom).toLocaleDateString()}</span>
                           </div>
-                        ) : (
-                          <div className="text-center py-5 text-muted">
-                            <Users size={32} className="mb-2" />
-                            <p>Supplier details not available</p>
+                          <div className="d-flex align-items-center">
+                            <Calendar size={16} className="text-primary me-2" />
+                            <span>To: {new Date(selectedOffer.validTo).toLocaleDateString()}</span>
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="col-12">
-                    <div className="card border-0 shadow-sm">
-                      <div className="card-body">
-                        <h5 className="card-title mb-4">Offer Details</h5>
-                        <div className="row g-3">
-                          <div className="col-md-4">
-                            <div className="mb-3">
-                              <label className="form-label text-muted small">Price</label>
-                              <div className="d-flex align-items-center">
-                                <DollarSign size={20} className="text-success me-2" />
-                                <h4 className="mb-0">${Number(selectedOffer.price).toFixed(2)}</h4>
-                              </div>
-                              {selectedOffer.quantity && (
-                                <small className="text-muted">Quantity: {selectedOffer.quantity}</small>
-                              )}
-                            </div>
-                          </div>
-                          
-                          <div className="col-md-4">
-                            <div className="mb-3">
-                              <label className="form-label text-muted small">Validity Period</label>
+                    
+                    <div className="col-md-4">
+                      <div className="mb-3">
+                        <label className="form-label text-muted small">Status</label>
+                        <div>
+                          {new Date(selectedOffer.validTo) >= new Date() ? (
+                            <div className="alert alert-success py-2 px-3 mb-0 d-flex align-items-center">
+                              <CheckCircle size={16} className="me-2" />
                               <div>
-                                <div className="d-flex align-items-center mb-1">
-                                  <Calendar size={16} className="text-primary me-2" />
-                                  <span>From: {new Date(selectedOffer.validFrom).toLocaleDateString()}</span>
-                                </div>
-                                <div className="d-flex align-items-center">
-                                  <Calendar size={16} className="text-primary me-2" />
-                                  <span>To: {new Date(selectedOffer.validTo).toLocaleDateString()}</span>
+                                <span className="fw-medium">Active</span>
+                                <div className="small">
+                                  {getDaysStatus(selectedOffer.validTo).days} days remaining
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          
-                          <div className="col-md-4">
-                            <div className="mb-3">
-                              <label className="form-label text-muted small">Status</label>
+                          ) : (
+                            <div className="alert alert-danger py-2 px-3 mb-0 d-flex align-items-center">
+                              <AlertCircle size={16} className="me-2" />
                               <div>
-                                {new Date(selectedOffer.validTo) >= new Date() ? (
-                                  <div className="alert alert-success py-2 px-3 mb-0 d-flex align-items-center">
-                                    <CheckCircle size={16} className="me-2" />
-                                    <div>
-                                      <span className="fw-medium">Active</span>
-                                      <div className="small">
-                                        {getDaysStatus(selectedOffer.validTo).days} days remaining
-                                      </div>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="alert alert-danger py-2 px-3 mb-0 d-flex align-items-center">
-                                    <AlertCircle size={16} className="me-2" />
-                                    <div>
-                                      <span className="fw-medium">Expired</span>
-                                      <div className="small">
-                                        {Math.abs(getDaysStatus(selectedOffer.validTo).days)} days ago
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {selectedOffer.notes && (
-                            <div className="col-12">
-                              <div className="mb-3">
-                                <label className="form-label text-muted small">Notes</label>
-                                <p className="border rounded p-3 bg-light">{selectedOffer.notes}</p>
+                                <span className="fw-medium">Expired</span>
+                                <div className="small">
+                                  {Math.abs(getDaysStatus(selectedOffer.validTo).days)} days ago
+                                </div>
                               </div>
                             </div>
                           )}
-                          
-                          <div className="col-12">
-                            <div className="mb-0">
-                              <label className="form-label text-muted small">Created</label>
-                              <div className="text-muted small">
-                                {selectedOffer.createdAt ? getRelativeDate(selectedOffer.createdAt) : 'Unknown'}
-                              </div>
-                            </div>
-                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {selectedOffer.notes && (
+                      <div className="col-12">
+                        <div className="mb-3">
+                          <label className="form-label text-muted small">Notes</label>
+                          <p className="border rounded p-3 bg-light">{selectedOffer.notes}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="col-12">
+                      <div className="mb-0">
+                        <label className="form-label text-muted small">Created</label>
+                        <div className="text-muted small">
+                          {selectedOffer.createdAt ? getRelativeDate(selectedOffer.createdAt) : 'Unknown'}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setSelectedOffer(null)}>Close</button>
-                <Link to={`/offers/${selectedOffer.id}/edit`} className="btn btn-primary">
-                  <Edit size={16} className="me-2" />
-                  Edit Offer
-                </Link>
-              </div>
             </div>
           </div>
-          <div className="modal-backdrop fade show" onClick={() => setSelectedOffer(null)}></div>
         </div>
-      )}
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={() => setSelectedOffer(null)}>Close</button>
+          <Link to={`/offers/${selectedOffer.id}/edit`} className="btn btn-primary">
+            <Edit size={16} className="me-2" />
+            Edit Offer
+          </Link>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

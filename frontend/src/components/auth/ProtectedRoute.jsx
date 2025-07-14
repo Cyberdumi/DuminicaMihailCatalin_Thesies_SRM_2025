@@ -6,7 +6,6 @@ const ProtectedRoute = ({ requiredRoles }) => {
   const { isAuthenticated, currentUser, loading } = useContext(AuthContext);
   const location = useLocation();
 
-  // Show loading indicator
   if (loading) {
     return (
       <div className="d-flex justify-content-center mt-5">
@@ -17,17 +16,16 @@ const ProtectedRoute = ({ requiredRoles }) => {
     );
   }
 
-  // Check if user is authenticated
+ 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check for required roles if provided
+
   if (requiredRoles && !requiredRoles.includes(currentUser.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // User is authenticated and authorized
   return <Outlet />;
 };
 

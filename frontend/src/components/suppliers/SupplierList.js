@@ -560,7 +560,7 @@ function SupplierList() {
   <div className="supplier-detail-overlay" onClick={() => setSelectedSupplier(null)}>
     <div 
       className="supplier-detail-modal"
-      onClick={e => e.stopPropagation()} // Prevents closing when clicking inside modal
+      onClick={e => e.stopPropagation()} 
     >
       <div className="modal-content">
         <div className="modal-header">

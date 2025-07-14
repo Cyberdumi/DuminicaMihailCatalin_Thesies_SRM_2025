@@ -23,7 +23,7 @@ function Register() {
       [name]: value
     }));
     
-    // Clear field error when user types
+ 
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
@@ -60,7 +60,7 @@ function Register() {
     setLoading(true);
     
     try {
-      // Don't send confirmPassword to the API
+    
       const { confirmPassword, ...userData } = user;
       await register(userData);
       navigate('/');

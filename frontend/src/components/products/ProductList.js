@@ -571,13 +571,12 @@ function ProductList() {
           </div>
         )}
       </div>
-// Replace the existing modal implementation with this code
 
 {selectedProduct && (
   <div className="product-detail-overlay" onClick={() => setSelectedProduct(null)}>
     <div 
       className="product-detail-modal"
-      onClick={e => e.stopPropagation()} // Prevents closing when clicking inside modal
+      onClick={e => e.stopPropagation()} 
     >
       <div className="modal-content">
         <div className="modal-header">

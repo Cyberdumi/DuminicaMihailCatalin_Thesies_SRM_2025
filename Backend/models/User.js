@@ -50,7 +50,6 @@ const User = sequelize.define('User', {
   }
 });
 
-// Instance method to compare passwords
 User.prototype.comparePassword = async function(candidatePassword) {
   try {
     console.log('Comparing passwords');

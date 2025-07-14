@@ -59,7 +59,6 @@ function OfferForm() {
         setLoading(true);
         try {
           const data = await offerService.getById(id);
-          // Format dates for the form
           data.validFrom = data.validFrom.split('T')[0];
           data.validTo = data.validTo.split('T')[0];
           setOffer(data);

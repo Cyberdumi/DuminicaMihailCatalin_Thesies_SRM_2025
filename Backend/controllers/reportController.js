@@ -123,17 +123,17 @@ exports.getSupplierPerformance = async (req, res) => {
     });
     
     const performance = suppliers.map(supplier => {
-      // Calculate metrics based on offers
+      
       const offers = supplier.offers || [];
       const activeOffers = offers.filter(o => new Date(o.validTo) >= new Date());
       
       return {
         id: supplier.id,
         name: supplier.name,
-        onTimeDelivery: Math.floor(Math.random() * 15) + 85, // In a real app, this would be real data
+        onTimeDelivery: Math.floor(Math.random() * 15) + 85, 
         qualityScore: offers.length > 0 ? Math.round((activeOffers.length / offers.length) * 100) : 0,
-        priceCompetitiveness: Math.floor(Math.random() * 15) + 85, // Placeholder
-        overall: Math.floor(Math.random() * 10) + 85 // Placeholder
+        priceCompetitiveness: Math.floor(Math.random() * 15) + 85, 
+        overall: Math.floor(Math.random() * 10) + 85 
       };
     });
     

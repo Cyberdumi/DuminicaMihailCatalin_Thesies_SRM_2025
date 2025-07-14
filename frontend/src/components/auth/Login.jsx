@@ -1,19 +1,27 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
 function Login() {
-  const { login, error: authError } = useContext(AuthContext);
+  const { login, error: authError, clearError } = useContext(AuthContext);
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [hasAttemptedLogin, setHasAttemptedLogin] = useState(false);
   
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
+
+ 
+  useEffect(() => {
+    if (clearError) {
+      clearError();
+    }
+  }, [clearError]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,12 +29,16 @@ function Login() {
       ...prev,
       [name]: value
     }));
+    if (error) {
+      setError(null);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    setHasAttemptedLogin(true);
     
     try {
       await login(credentials.username, credentials.password);
@@ -46,7 +58,7 @@ function Login() {
             <h4 className="mb-0">Login</h4>
           </div>
           <div className="card-body">
-            {(error || authError) && (
+            {(error || (hasAttemptedLogin && authError)) && (
               <div className="alert alert-danger" role="alert">
                 {error || authError}
               </div>

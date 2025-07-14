@@ -32,7 +32,6 @@ function AdminDashboard() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      // TODO an admin-only endpoint 
       const response = await api.get('/admin/users');
       setUsers(response.data);
       setLoading(false);
@@ -66,7 +65,6 @@ function AdminDashboard() {
       [name]: type === 'checkbox' ? checked : value
     });
     
-    // Clear errors when user types
     if (formErrors[name]) {
       setFormErrors({
         ...formErrors,
@@ -106,7 +104,6 @@ function AdminDashboard() {
   const handleSubmitUser = async (e) => {
     e.preventDefault();
     
-    // Validate form
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -116,7 +113,6 @@ function AdminDashboard() {
     setIsSubmitting(true);
     
     try {
-      // Prepare user data for API
       const userData = {
         username: newUser.username,
         email: newUser.email,
@@ -125,13 +121,10 @@ function AdminDashboard() {
         isActive: newUser.isActive
       };
       
-      // Send API request
       const response = await api.post('/admin/users', userData);
       
-      // Add new user to list
       setUsers([...users, response.data]);
       
-      // Close modal and reset form
       setShowAddUserModal(false);
       setNewUser({
         username: '',
@@ -153,17 +146,14 @@ function AdminDashboard() {
   };
 
   const filteredUsers = users.filter(user => {
-    // Search filter
     const matchesSearch = 
       searchTerm === '' ||
       user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.role.toLowerCase().includes(searchTerm.toLowerCase());
     
-    // Role filter
     const matchesRole = filters.role === '' || user.role === filters.role;
     
-    // Status filter
     const matchesStatus = 
       filters.status === '' || 
       (filters.status === 'active' && user.isActive) || 

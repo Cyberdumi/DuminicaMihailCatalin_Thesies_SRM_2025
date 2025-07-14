@@ -10,23 +10,20 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Update auth header whenever token changes
   useEffect(() => {
     if (token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       localStorage.setItem('token', token);
       
       try {
-        // Check if token is expired
         const decoded = jwtDecode(token);
         const currentTime = Date.now() / 1000;
         
         if (decoded.exp < currentTime) {
-          // Token is expired
           logout();
         }
       } catch (error) {
-        // Invalid token
+  
         logout();
       }
     } else {
@@ -35,7 +32,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Get current user on mount or token change
   useEffect(() => {
     const fetchCurrentUser = async () => {
       if (!token) {
@@ -53,7 +49,6 @@ export const AuthProvider = ({ children }) => {
         if (err.response?.status === 401 || err.response?.status === 403) {
           logout();
         }
-        setError('Failed to authenticate');
       } finally {
         setLoading(false);
       }
@@ -102,6 +97,10 @@ export const AuthProvider = ({ children }) => {
     setError(null);
   };
 
+  const clearError = () => {
+    setError(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -111,7 +110,8 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: !!token,
         login,
         register,
-        logout
+        logout,
+        clearError  
       }}
     >
       {children}
