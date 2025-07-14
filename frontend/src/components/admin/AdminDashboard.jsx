@@ -374,7 +374,6 @@ function AdminDashboard() {
         </div>
       </div>
 
-      {/* Add User Modal */}
       {showAddUserModal && (
         <div className="supplier-detail-overlay" onClick={() => setShowAddUserModal(false)}>
           <div 
